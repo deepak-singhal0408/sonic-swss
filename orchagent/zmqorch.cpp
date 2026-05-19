@@ -14,9 +14,12 @@ void ZmqConsumer::execute()
 
     if (!m_ordered_queue)
     {
-        std::deque<KeyOpFieldsValuesTuple> entries;
-        table->pops(entries);
-        addToSync(entries);
+        do
+        {
+            std::deque<KeyOpFieldsValuesTuple> entries;
+            table->pops(entries);
+            update_size = addToSync(entries);
+        } while (update_size != 0);
     }
     else
     {
